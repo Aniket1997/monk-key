@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), svgr()],
   server: {
     proxy: {
-      '/api': 'http://localhost:9000', // Change this to the URL of your backend
+      "/api": "http://localhost:9000", // Change this to the URL of your backend
     },
   },
 });

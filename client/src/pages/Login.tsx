@@ -17,7 +17,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLInputElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -63,7 +63,10 @@ const Login: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && <p className="text-error text-center">{error}</p>}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email Address
             </label>
             <input
@@ -77,7 +80,10 @@ const Login: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -99,7 +105,10 @@ const Login: React.FC = () => {
         </form>
         <p className="mt-6 text-sm text-center text-gray-600">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-primary font-semibold hover:underline">
+          <Link
+            to="/signup"
+            className="text-primary font-semibold hover:underline"
+          >
             Sign Up
           </Link>
         </p>

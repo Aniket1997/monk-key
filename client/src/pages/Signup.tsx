@@ -83,7 +83,13 @@ const Signup: React.FC = () => {
         const response = await registerUser(userData); // Call the registerUser function
         setSuccessMessage(response.message); // Handle the response from the API
         setLoading(false); // Stop loading after success
-        setFormData({ email: "", phone: "", fullName: "", password: "", confirmPassword: "" }); // Reset form after submission
+        setFormData({
+          email: "",
+          phone: "",
+          fullName: "",
+          password: "",
+          confirmPassword: "",
+        }); // Reset form after submission
       } catch (error) {
         setLoading(false); // Stop loading on error
         setSuccessMessage(null); // Reset success message
@@ -112,8 +118,8 @@ const Signup: React.FC = () => {
           Welcome to <span className="text-yellow-400">Monk Key</span>
         </h1>
         <p className="text-sm md:text-base text-center max-w-md leading-relaxed">
-          Unlock your potential by creating an account and accessing personalized features
-          tailored just for you.
+          Unlock your potential by creating an account and accessing
+          personalized features tailored just for you.
         </p>
       </div>
 
@@ -133,13 +139,17 @@ const Signup: React.FC = () => {
               repeatType: "loop",
             }}
           />
-          <h1 className="text-xl font-bold text-blue-700">Welcome to Monk Key</h1>
+          <h1 className="text-xl font-bold text-blue-700">
+            Welcome to Monk Key
+          </h1>
         </div>
 
         <h2 className="text-2xl md:text-3xl font-semibold text-center text-blue-700 mb-6">
           Create Your Account
         </h2>
-        {successMessage && <p className="text-green-500 text-center mb-4">{successMessage}</p>}
+        {successMessage && (
+          <p className="text-green-500 text-center mb-4">{successMessage}</p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <InputField
             type="email"

@@ -25,7 +25,9 @@ interface ApiResponse {
 }
 
 // Register function using Axios
-export const registerUser = async (userData: RegisterUserData): Promise<ApiResponse> => {
+export const registerUser = async (
+  userData: RegisterUserData,
+): Promise<ApiResponse> => {
   try {
     const response = await axios.post("/api/auth/register", userData, {
       headers: {
@@ -42,7 +44,9 @@ export const registerUser = async (userData: RegisterUserData): Promise<ApiRespo
 };
 
 // Login function using Axios
-export const loginUser = async (userData: LoginUserData): Promise<ApiResponse> => {
+export const loginUser = async (
+  userData: LoginUserData,
+): Promise<ApiResponse> => {
   try {
     const response = await axios.post("/api/auth/login", userData, {
       headers: {
