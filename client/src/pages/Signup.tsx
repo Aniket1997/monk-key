@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InputField from "../component/InputField";
+import InputField from "../component/InputField.tsx";
 import meditate from "../assets/meditate.png";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
