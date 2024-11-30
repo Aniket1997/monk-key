@@ -1,14 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
 
-import CloseIcon from '@mui/icons-material/Close';
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 
-import Info from './Info';
+import Info from "./Info";
 
 interface InfoProps {
   totalPrice: string;
@@ -22,10 +22,10 @@ export default function InfoMobile({ totalPrice }: InfoProps) {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 'auto', px: 3, pb: 3, pt: 8 }} role="presentation">
+    <Box sx={{ width: "auto", px: 3, pb: 3, pt: 8 }} role="presentation">
       <IconButton
         onClick={toggleDrawer(false)}
-        sx={{ position: 'absolute', right: 8, top: 8 }}
+        sx={{ position: "absolute", right: 8, top: 8 }}
       >
         <CloseIcon />
       </IconButton>
@@ -48,9 +48,9 @@ export default function InfoMobile({ totalPrice }: InfoProps) {
         onClose={toggleDrawer(false)}
         PaperProps={{
           sx: {
-            top: 'var(--template-frame-height, 0px)',
-            backgroundImage: 'none',
-            backgroundColor: 'background.paper',
+            top: "var(--template-frame-height, 0px)",
+            backgroundImage: "none",
+            backgroundColor: "background.paper",
           },
         }}
       >
