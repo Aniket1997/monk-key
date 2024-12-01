@@ -17,7 +17,7 @@ export default function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Sitemark
+        Monk-key
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}

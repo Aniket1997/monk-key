@@ -11,19 +11,20 @@ import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
 import SettingsSuggestRoundedIcon from "@mui/icons-material/SettingsSuggestRounded";
 import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
 import ThumbUpAltRoundedIcon from "@mui/icons-material/ThumbUpAltRounded";
+import { styled } from "@mui/material";
 
 const items = [
   {
     icon: <SettingsSuggestRoundedIcon />,
-    title: "Adaptable performance",
+    title: "Built to Last",
     description:
-      "Our product effortlessly adjusts to your needs, boosting efficiency and simplifying your tasks.",
+      "Rely on a platform designed to support your long-term preparation journey, making it a lasting and valuable resource.",
   },
   {
     icon: <ConstructionRoundedIcon />,
-    title: "Built to last",
+    title: "Seamless User Experience",
     description:
-      "Experience unmatched durability that goes above and beyond with lasting investment.",
+      "Navigate effortlessly with an intuitive interface that integrates into your routine, making study preparation stress-free.",
   },
   {
     icon: <ThumbUpAltRoundedIcon />,
@@ -35,21 +36,27 @@ const items = [
     icon: <AutoFixHighRoundedIcon />,
     title: "Innovative functionality",
     description:
-      "Stay ahead with features that set new standards, addressing your evolving needs better than the rest.",
+      "Stay ahead with advanced features like customizable roadmaps, personalized quizzes, and dynamic goal tracking, redefining study preparation.",
   },
   {
     icon: <SupportAgentRoundedIcon />,
     title: "Reliable support",
     description:
-      "Count on our responsive customer support, offering assistance that goes beyond the purchase.",
+      "Our responsive team is here to guide you every step of the way, ensuring you have the assistance you need to succeed.",
   },
   {
     icon: <QueryStatsRoundedIcon />,
-    title: "Precision in every detail",
+    title: "Attention to Detail",
     description:
-      "Enjoy a meticulously crafted product where small touches make a significant impact on your overall experience.",
+      "Experience a platform designed with precision, where every feature is thoughtfully crafted to make your study journey more effective and enjoyable.",
   },
 ];
+
+const FlexContainer = styled("div")({
+  display: "flex",
+  gap: "10px",
+  alignItems: "center",
+});
 
 export default function Highlights() {
   return (
@@ -81,9 +88,8 @@ export default function Highlights() {
             Highlights
           </Typography>
           <Typography variant="body1" sx={{ color: "grey.400" }}>
-            Explore why our product stands out: adaptability, durability,
-            user-friendly design, and innovation. Enjoy reliable customer
-            support and precision in every detail.
+            Effortlessly tailor your study goals and roadmaps to match your pace
+            and needs, boosting efficiency and helping you achieve more.
           </Typography>
         </Box>
         <Grid container spacing={2}>
@@ -102,11 +108,13 @@ export default function Highlights() {
                   backgroundColor: "grey.800",
                 }}
               >
-                <Box sx={{ opacity: "50%" }}>{item.icon}</Box>
-                <div>
+                <FlexContainer>
+                  <Box sx={{ opacity: "50%" }}>{item.icon}</Box>
                   <Typography gutterBottom sx={{ fontWeight: "medium" }}>
                     {item.title}
                   </Typography>
+                </FlexContainer>
+                <div>
                   <Typography variant="body2" sx={{ color: "grey.400" }}>
                     {item.description}
                   </Typography>

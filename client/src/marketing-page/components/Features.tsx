@@ -72,6 +72,12 @@ const Chip = styled(MuiChip)<ChipProps>(({ theme, selected }) => ({
   }),
 }));
 
+const FlexContainer = styled("div")({
+  display: "flex",
+  gap: "10px",
+  alignItems: "center",
+});
+
 interface MobileLayoutProps {
   selectedItemIndex: number;
   handleItemClick: (index: number) => void;
@@ -224,9 +230,11 @@ export default function Features() {
                     },
                   ]}
                 >
-                  {icon}
+                  <FlexContainer>
+                    {icon}
 
-                  <Typography variant="h6">{title}</Typography>
+                    <Typography variant="h6">{title}</Typography>
+                  </FlexContainer>
                   <Typography variant="body2">{description}</Typography>
                 </Box>
               </Box>

@@ -8,14 +8,13 @@ import Pricing from "./components/Pricing.tsx";
 import Features from "./components/Features.tsx";
 import Testimonials from "./components/Testimonials.tsx";
 import FAQ from "./components/FAQ.tsx";
-import Footer from "./components/Footer.tsx";
+import Footer from "../component/Footer.tsx";
 import AppTheme from "../shared-theme/AppTheme.tsx";
 
 export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-
       <AppAppBar />
       <Hero />
       <div>
@@ -23,13 +22,21 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
           <Features />
         </div>
         <Divider />
-        <Testimonials />
+        <div id="testimonials-section">
+          <Testimonials />
+        </div>
         <Divider />
-        <Highlights />
+        <div id="heighlight-section">
+          <Highlights />
+        </div>
         <Divider />
-        <Pricing />
+        <div id="pricing-section">
+          <Pricing />
+        </div>
         <Divider />
-        <FAQ />
+        <div id="faq-section">
+          <FAQ />
+        </div>
         <Divider />
         <Footer />
       </div>

@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -35,12 +35,21 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => {
   };
 });
 
+const StyledLinkButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  textDecoration: "none",
+  outline: "none",
+}));
+
 export default function AppAppBar() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const location = useLocation(); // Get current route
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+
+  const isBlogPage = location.pathname === "/blogs";
 
   return (
     <AppBar
@@ -59,44 +68,85 @@ export default function AppAppBar() {
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
           >
             <Sitemark />
-            <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                onClick={() => {
-                  document.getElementById("features-section")?.scrollIntoView({
-                    behavior: "smooth",
-                  });
-                }}
-              >
-                Features
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Highlights
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                sx={{ minWidth: 0 }}
-              >
-                FAQ
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                sx={{ minWidth: 0 }}
-                component={Link}
-                to="/blogs"
-              >
-                Blog
-              </Button>
-            </Box>
+            {!isBlogPage && ( // Only show these tabs if not on the blog page
+              <Box sx={{ display: { xs: "none", md: "flex" }, ml: 3 }}>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => {
+                    document
+                      .getElementById("features-section")
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                  }}
+                >
+                  Features
+                </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => {
+                    document
+                      .getElementById("testimonials-section")
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                  }}
+                >
+                  Testimonials
+                </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => {
+                    document
+                      .getElementById("heighlight-section")
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                  }}
+                >
+                  Highlights
+                </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  onClick={() => {
+                    document.getElementById("pricing-section")?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  Pricing
+                </Button>
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  sx={{ minWidth: 0 }}
+                  onClick={() => {
+                    document.getElementById("faq-section")?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  FAQ
+                </Button>
+                <StyledLinkButton
+                  component={Link}
+                  to="/blogs"
+                  variant="text"
+                  size="small"
+                >
+                  <button>Blog</button>
+                </StyledLinkButton>
+              </Box>
+            )}
           </Box>
           <Box
             sx={{
@@ -140,12 +190,63 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
 
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
+                {!isBlogPage && ( // Also hide these menu items if on the blog page
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        document
+                          .getElementById("features-section")
+                          ?.scrollIntoView({
+                            behavior: "smooth",
+                          });
+                      }}
+                    >
+                      Features
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        document
+                          .getElementById("testimonials-section")
+                          ?.scrollIntoView({
+                            behavior: "smooth",
+                          });
+                      }}
+                    >
+                      Testimonials
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        document
+                          .getElementById("heighlight-section")
+                          ?.scrollIntoView({
+                            behavior: "smooth",
+                          });
+                      }}
+                    >
+                      Highlights
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        document
+                          .getElementById("pricing-section")
+                          ?.scrollIntoView({
+                            behavior: "smooth",
+                          });
+                      }}
+                    >
+                      Pricing
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        document.getElementById("faq-section")?.scrollIntoView({
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      FAQ
+                    </MenuItem>
+                  </>
+                )}
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
                   <Button color="primary" variant="contained" fullWidth>
