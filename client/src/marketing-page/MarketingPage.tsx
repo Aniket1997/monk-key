@@ -2,8 +2,7 @@ import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import AppAppBar from "../component/AppAppBar.tsx";
-import Hero from "./components/Hero.tsx";
-import LogoCollection from "./components/LogoCollection.tsx";
+import Hero from "../component/Hero.tsx";
 import Highlights from "./components/Highlights.tsx";
 import Pricing from "./components/Pricing.tsx";
 import Features from "./components/Features.tsx";
@@ -20,7 +19,6 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
       <AppAppBar />
       <Hero />
       <div>
-        <LogoCollection />
         <Features />
         <Divider />
         <Testimonials />

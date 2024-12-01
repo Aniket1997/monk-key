@@ -72,10 +72,10 @@ export default function Hero() {
               display: "flex",
               flexDirection: { xs: "column", sm: "row" },
               alignItems: "center",
-              fontSize: "clamp(3rem, 10vw, 3.5rem)",
+              fontSize: "clamp(2rem, 10vw, 2rem)",
             }}
           >
-            Our&nbsp;latest&nbsp;
+            Empower&nbsp; Learning&nbsp; Journey&nbsp;
             <Typography
               component="span"
               variant="h1"
@@ -87,7 +87,7 @@ export default function Hero() {
                 }),
               })}
             >
-              products
+              AI-Driven
             </Typography>
           </Typography>
           <Typography
@@ -97,9 +97,7 @@ export default function Hero() {
               width: { sm: "100%", md: "80%" },
             }}
           >
-            Explore our cutting-edge dashboard, delivering high-quality
-            solutions tailored to your needs. Elevate your experience with
-            top-tier features and services.
+            Master any topic with personalized AI-driven tools. Create roadmaps, set goals, and track progress to ace your exams—be it academics, certifications, or beyond. Your success, reimagined.
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}
