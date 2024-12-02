@@ -7,7 +7,7 @@ import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -16,6 +16,7 @@ import { styled } from "@mui/material/styles";
 import AppTheme from "../shared-theme/AppTheme";
 import SitemarkIcon from "../component/SitemarkIcon.tsx";
 import { registerUser } from "../api/AuthApi.ts"; // Import the registerUser function
+import Cookies from "js-cookie";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -73,6 +74,7 @@ const BrandContainer = styled("div")(() => ({
 }));
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -123,6 +125,14 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
         password: formData.password,
         phone: formData.mobile,
       });
+
+      // Set the token in a cookie for 10 hours
+      const token = response.token;
+      if (token) {
+        Cookies.set("authToken", token, { expires: 10 / 24 }); 
+        navigate("/dashboard");
+      }
+
       setServerMessage(response.message);
       console.log("User registered successfully:", response);
     } catch (error: any) {
