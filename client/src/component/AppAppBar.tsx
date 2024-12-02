@@ -155,7 +155,13 @@ export default function AppAppBar() {
               alignItems: "center",
             }}
           >
-            <Button color="primary" variant="text" size="small">
+            <Button
+              color="primary"
+              variant="text"
+              size="small"
+              component={Link}
+              to="/sign-in"
+            >
               Sign in
             </Button>
             <Button color="primary" variant="contained" size="small">
@@ -254,7 +260,13 @@ export default function AppAppBar() {
                   </Button>
                 </MenuItem>
                 <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
+                  <Button
+                    color="primary"
+                    variant="outlined"
+                    fullWidth
+                    component={Link}
+                    to="/sign-in"
+                  >
                     Sign in
                   </Button>
                 </MenuItem>
