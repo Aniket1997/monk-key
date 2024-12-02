@@ -15,6 +15,7 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import AppTheme from "../shared-theme/AppTheme";
 import SitemarkIcon from "../component/SitemarkIcon.tsx";
+import { registerUser } from "../api/AuthApi.ts"; // Import the registerUser function
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -34,19 +35,18 @@ const Card = styled(MuiCard)(({ theme }) => ({
     boxShadow:
       "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
   }),
-  /* Hide the scrollbar */
   "&::-webkit-scrollbar": {
-    display: "none", // For WebKit browsers
+    display: "none",
   },
-  msOverflowStyle: "none", // For Internet Explorer and Edge
-  scrollbarWidth: "none", // For Firefox
+  msOverflowStyle: "none",
+  scrollbarWidth: "none",
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  position: "relative", // Establish stacking context
+  position: "relative",
   height: "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
   minHeight: "100%",
-  overflowY: "auto", // Ensure scrolling applies to content
+  overflowY: "auto",
   padding: theme.spacing(2),
   [theme.breakpoints.up("sm")]: {
     padding: theme.spacing(4),
@@ -55,7 +55,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     content: '""',
     display: "block",
     position: "absolute",
-    zIndex: -1, // Ensure it stays below content
+    zIndex: -1,
     inset: 0,
     backgroundImage:
       "radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
@@ -69,66 +69,70 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 
 const BrandContainer = styled("div")(() => ({
   display: "flex",
-  flexDirection: "row", // You can change this to 'column' if needed
+  flexDirection: "row",
 }));
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState("");
+  const [formData, setFormData] = React.useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+  });
+  const [errors, setErrors] = React.useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+  });
+  const [loading, setLoading] = React.useState(false);
+  const [serverMessage, setServerMessage] = React.useState("");
 
-  const validateInputs = () => {
-    const email = document.getElementById("email") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
-    const name = document.getElementById("name") as HTMLInputElement;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
 
-    let isValid = true;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
+    let error = "";
+    if (name === "name" && value.trim().length === 0) {
+      error = "Name is required.";
+    } else if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
+      error = "Please enter a valid email address.";
+    } else if (name === "mobile" && !/^\d{10}$/.test(value)) {
+      error = "Mobile number must be exactly 10 digits.";
+    } else if (name === "password" && value.length < 6) {
+      error = "Password must be at least 6 characters long.";
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage("Name is required.");
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage("");
-    }
-
-    return isValid;
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
-      return;
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const hasErrors = Object.values(errors).some((error) => error !== "");
+    if (hasErrors) return;
+
+    setLoading(true);
+    setServerMessage("");
+
+    try {
+      const response = await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.mobile,
+      });
+      setServerMessage(response.message);
+      console.log("User registered successfully:", response);
+    } catch (error: any) {
+      setServerMessage(
+        error.response?.data?.message || "An error occurred. Please try again.",
+      );
+      console.error("Error registering user:", error);
+    } finally {
+      setLoading(false);
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get("name"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   return (
@@ -139,7 +143,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           <BrandContainer>
             <SitemarkIcon />
           </BrandContainer>
-
           <Typography
             component="h1"
             variant="h4"
@@ -161,9 +164,10 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 id="name"
                 placeholder="Jon Snow"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? "error" : "primary"}
+                value={formData.name}
+                onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
               />
             </FormControl>
             <FormControl>
@@ -175,10 +179,24 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 placeholder="your@email.com"
                 name="email"
                 autoComplete="email"
-                variant="outlined"
-                error={emailError}
-                helperText={emailErrorMessage}
-                color={passwordError ? "error" : "primary"}
+                value={formData.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="mobile">Mobile Number</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="mobile"
+                name="mobile"
+                placeholder="1234567890"
+                value={formData.mobile}
+                onChange={handleChange}
+                error={!!errors.mobile}
+                helperText={errors.mobile}
               />
             </FormControl>
             <FormControl>
@@ -191,25 +209,32 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                variant="outlined"
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                color={passwordError ? "error" : "primary"}
+                value={formData.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
               />
             </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive updates via email."
-            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              onClick={validateInputs}
+              disabled={loading}
             >
-              Sign up
+              {loading ? "Signing up..." : "Sign up"}
             </Button>
           </Box>
+          {serverMessage && (
+            <Typography
+              sx={{
+                color: serverMessage.includes("error")
+                  ? "error.main"
+                  : "success.main",
+              }}
+            >
+              {serverMessage}
+            </Typography>
+          )}
           <Divider>
             <Typography sx={{ color: "text.secondary" }}>or</Typography>
           </Divider>
