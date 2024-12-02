@@ -7,7 +7,7 @@ import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -129,7 +129,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       // Set the token in a cookie for 10 hours
       const token = response.token;
       if (token) {
-        Cookies.set("authToken", token, { expires: 10 / 24 }); 
+        Cookies.set("authToken", token, { expires: 10 / 24 });
         navigate("/dashboard");
       }
 

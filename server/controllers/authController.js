@@ -11,6 +11,7 @@ const register = async (req, res) => {
     const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
     if (existingUser) {
       return res.status(400).json({
+        status:"failure",
         message: "User with this email or phone number already exists",
       });
     }
@@ -26,9 +27,9 @@ const register = async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "User registered successfully", token, user: newUser });
+      .json({ status:"success",message: "User registered successfully", token, user: newUser });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ status:"failure",message: "Server error", error: err.message });
   }
 };
 
@@ -38,12 +39,12 @@ const login = async (req, res) => {
   try {
     // Check if a user with the given email exists
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ status:"failure",message: "User not found" });
 
     // Compare provided and stored passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ status:"failure",message: "Invalid credentials" });
 
     // Generate a JWT token
     const token = jwt.sign(
@@ -54,6 +55,7 @@ const login = async (req, res) => {
 
     res.status(200).json({
       message: "Login successful",
+      status: "success",
       token,
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });

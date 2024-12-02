@@ -6,12 +6,14 @@ import Checkbox from "@mui/material/Checkbox";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword.tsx";
 import SitemarkIcon from "../component/SitemarkIcon.tsx";
+import { loginUser } from "../api/AuthApi.ts"; // Assuming your login function is in api.js or api.ts
+import Cookies from "js-cookie";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -32,11 +34,28 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 export default function SignInCard() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const navigate = useNavigate();
+  const [formData, setFormData] = React.useState({
+    email: "",
+    password: "",
+  });
+
+  const [formErrors, setFormErrors] = React.useState({
+    email: "",
+    password: "",
+  });
+
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [serverMessage, setServerMessage] = React.useState("");
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,43 +65,57 @@ export default function SignInCard() {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
   const validateInputs = () => {
-    const email = document.getElementById("email") as HTMLInputElement;
-    const password = document.getElementById("password") as HTMLInputElement;
-
+    const errors = { email: "", password: "" };
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
+    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Please enter a valid email address.";
       isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
+    if (!formData.password || formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long.";
       isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
     }
 
+    setFormErrors(errors);
     return isValid;
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const isValid = validateInputs();
+    if (!isValid) return;
+
+    setLoading(true);
+    setServerMessage("");
+
+    try {
+      const response = await loginUser({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.token) {
+        // Set the token in a cookie for 10 hours
+        Cookies.set("authToken", response.token, { expires: 10 / 24 });
+        //setSurverStatus(response.status || "default status");
+        setServerMessage(response.message);
+        // Optionally redirect to dashboard after successful login (if required)
+        navigate("/dashboard");
+      }
+
+      console.log("User logged in successfully:", response);
+    } catch (error: any) {
+      setServerMessage(
+        error.response?.data?.message || "An error occurred. Please try again.",
+      );
+      console.error("Error logging in user:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -106,17 +139,18 @@ export default function SignInCard() {
         <FormControl>
           <FormLabel htmlFor="email">Email</FormLabel>
           <TextField
-            error={emailError}
-            helperText={emailErrorMessage}
+            error={!!formErrors.email}
+            helperText={formErrors.email}
             id="email"
-            type="email"
             name="email"
+            type="email"
             placeholder="your@email.com"
             autoComplete="email"
             required
             fullWidth
             variant="outlined"
-            color={emailError ? "error" : "primary"}
+            value={formData.email}
+            onChange={handleInputChange}
           />
         </FormControl>
         <FormControl>
@@ -133,17 +167,18 @@ export default function SignInCard() {
             </Link>
           </Box>
           <TextField
-            error={passwordError}
-            helperText={passwordErrorMessage}
-            name="password"
-            placeholder="••••••"
-            type="password"
+            error={!!formErrors.password}
+            helperText={formErrors.password}
             id="password"
+            name="password"
+            type="password"
+            placeholder="••••••"
             autoComplete="current-password"
             required
             fullWidth
             variant="outlined"
-            color={passwordError ? "error" : "primary"}
+            value={formData.password}
+            onChange={handleInputChange}
           />
         </FormControl>
         <FormControlLabel
@@ -151,14 +186,23 @@ export default function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          onClick={validateInputs}
-        >
-          Sign in
+        <Button type="submit" fullWidth variant="contained" disabled={loading}>
+          {loading ? "Signing In..." : "Sign in"}
         </Button>
+        {/* {serverMessage && (
+          <Typography
+            color={
+              serverStatus === "error"
+                ? "error"
+                : serverStatus === "success"
+                  ? "success"
+                  : "textPrimary"
+            }
+            align="center"
+          >
+            {serverMessage}
+          </Typography>
+        )} */}
         <Typography sx={{ textAlign: "center" }}>
           Don&apos;t have an account?{" "}
           <span>
