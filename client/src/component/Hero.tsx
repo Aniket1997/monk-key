@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -7,7 +7,8 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { visuallyHidden } from "@mui/utils";
 import { styled } from "@mui/material/styles";
 
@@ -36,17 +37,38 @@ const StyledBox = styled("div")(({ theme }) => ({
   }),
 }));
 
-export default function Hero() {
+const Hero: React.FC = () => {
+  const [email, setEmail] = useState<string>(""); // Typed as string
+  const navigate = useNavigate();
+
+  const handleCheckUser = async (): Promise<void> => {
+    if (!email) {
+      alert("Please enter an email address.");
+      return;
+    }
+    try {
+      const response = await axios.post("/api/auth/check-user", { email });
+      if (response.data.exists) {
+        setEmail(email); // Set user email in context
+        navigate(`/signin?email=${encodeURIComponent(email)}`); // Redirect to login with email
+      } else {
+        setEmail(email); // Set user email in context
+        navigate(`/signup?email=${encodeURIComponent(email)}`); // Redirect to signup with email
+      }
+    } catch (error) {
+      console.error("Error checking user:", error);
+    }
+  };
+
   return (
     <Box
       id="hero"
       sx={(theme) => ({
         width: "100%",
         backgroundRepeat: "no-repeat",
-
         backgroundImage:
           "radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)",
-        ...theme.applyStyles("dark", {
+        ...theme.applyStyles?.("dark", {
           backgroundImage:
             "radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 16%), transparent)",
         }),
@@ -82,7 +104,7 @@ export default function Hero() {
               sx={(theme) => ({
                 fontSize: "inherit",
                 color: "primary.main",
-                ...theme.applyStyles("dark", {
+                ...theme.applyStyles?.("dark", {
                   color: "primary.light",
                 }),
               })}
@@ -118,11 +140,11 @@ export default function Hero() {
               aria-label="Enter your email address"
               placeholder="Your email address"
               fullWidth
-              slotProps={{
-                htmlInput: {
-                  autoComplete: "off",
-                  "aria-label": "Enter your email address",
-                },
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Update email on change
+              inputProps={{
+                autoComplete: "off",
+                "aria-label": "Enter your email address",
               }}
             />
             <Button
@@ -130,6 +152,7 @@ export default function Hero() {
               color="primary"
               size="small"
               sx={{ minWidth: "fit-content" }}
+              onClick={handleCheckUser}
             >
               Start now
             </Button>
@@ -150,4 +173,6 @@ export default function Hero() {
       </Container>
     </Box>
   );
-}
+};
+
+export default Hero;

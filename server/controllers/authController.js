@@ -64,4 +64,20 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const checkUser = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ status: "failure", message: "Email is required" });
+
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      return res.status(200).json({ status: "success", exists: true });
+    } else {
+      return res.status(200).json({ status: "success", exists: false });
+    }
+  } catch (err) {
+    res.status(500).json({ status: "failure", message: "Server error", error: err.message });
+  }
+};
+
+module.exports = { register, login, checkUser };

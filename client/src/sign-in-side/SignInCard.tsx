@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
@@ -6,13 +6,13 @@ import Checkbox from "@mui/material/Checkbox";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import ForgotPassword from "./ForgotPassword.tsx";
-import SitemarkIcon from "../component/SitemarkIcon.tsx";
-import { loginUser } from "../api/AuthApi.ts"; // Assuming your login function is in api.js or api.ts
+import ForgotPassword from "./ForgotPassword";
+import SitemarkIcon from "../component/SitemarkIcon";
+import { loginUser } from "../api/AuthApi"; // Assuming your login function is in api.js or api.ts
 import Cookies from "js-cookie";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -35,11 +35,14 @@ const Card = styled(MuiCard)(({ theme }) => ({
 
 export default function SignInCard() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [formData, setFormData] = React.useState({
     email: "",
     password: "",
   });
 
+  const [emailFromQuery, setEmailFromQuery] = React.useState(false); // Track if the email is from the query param
   const [formErrors, setFormErrors] = React.useState({
     email: "",
     password: "",
@@ -49,12 +52,28 @@ export default function SignInCard() {
   const [loading, setLoading] = React.useState(false);
   const [serverMessage, setServerMessage] = React.useState("");
 
+  // Extract the email from the URL query string
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const email = queryParams.get("email");
+    if (email) {
+      setFormData((prevData) => ({
+        ...prevData,
+        email,
+      }));
+      setEmailFromQuery(true); // Mark email as coming from the query param
+    }
+  }, [location.search]);
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    if (name === "email") {
+      setEmailFromQuery(false); // Allow editing when user types in the email
+    }
   };
 
   const handleClickOpen = () => {
@@ -101,13 +120,9 @@ export default function SignInCard() {
       if (response.token) {
         // Set the token in a cookie for 10 hours
         Cookies.set("authToken", response.token, { expires: 10 / 24 });
-        //setSurverStatus(response.status || "default status");
         setServerMessage(response.message);
-        // Optionally redirect to dashboard after successful login (if required)
-        navigate("/dashboard");
+        navigate("/dashboard"); // Redirect to dashboard after successful login
       }
-
-      console.log("User logged in successfully:", response);
     } catch (error: any) {
       setServerMessage(
         error.response?.data?.message || "An error occurred. Please try again.",
@@ -151,6 +166,7 @@ export default function SignInCard() {
             variant="outlined"
             value={formData.email}
             onChange={handleInputChange}
+            disabled={emailFromQuery} // Disable only if the email is from the query
           />
         </FormControl>
         <FormControl>
@@ -189,20 +205,6 @@ export default function SignInCard() {
         <Button type="submit" fullWidth variant="contained" disabled={loading}>
           {loading ? "Signing In..." : "Sign in"}
         </Button>
-        {/* {serverMessage && (
-          <Typography
-            color={
-              serverStatus === "error"
-                ? "error"
-                : serverStatus === "success"
-                  ? "success"
-                  : "textPrimary"
-            }
-            align="center"
-          >
-            {serverMessage}
-          </Typography>
-        )} */}
         <Typography sx={{ textAlign: "center" }}>
           Don&apos;t have an account?{" "}
           <span>
