@@ -197,10 +197,6 @@ export default function SignInCard() {
             onChange={handleInputChange}
           />
         </FormControl>
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
-        />
         <ForgotPassword open={open} handleClose={handleClose} />
         <Button type="submit" fullWidth variant="contained" disabled={loading}>
           {loading ? "Signing In..." : "Sign in"}
