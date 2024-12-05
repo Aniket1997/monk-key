@@ -12,6 +12,14 @@ interface LoginUserData {
   password: string;
 }
 
+interface checkUserData {
+  email: string;
+}
+
+interface checkUserApiResponse {
+  status?: string;
+  exists?: Boolean;
+}
 // Define types for the response data
 interface ApiResponse {
   message: string;
@@ -58,6 +66,24 @@ export const loginUser = async (
     return response.data;
   } catch (error) {
     console.error("Error logging in user:", error);
+    throw error;
+  }
+};
+
+export const checkUser = async (
+  email: checkUserData,
+): Promise<checkUserApiResponse> => {
+  try {
+    const response = await axios.post("/api/auth/check-user", email, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Return the data from the response
+    return response.data;
+  } catch (error) {
+    console.error("Error registering user:", error);
     throw error;
   }
 };

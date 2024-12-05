@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { checkUser } from "../api/AuthApi";
 import { visuallyHidden } from "@mui/utils";
 import { styled } from "@mui/material/styles";
 
@@ -47,8 +47,8 @@ const Hero: React.FC = () => {
       return;
     }
     try {
-      const response = await axios.post("/api/auth/check-user", { email });
-      if (response.data.exists) {
+      const response = await checkUser({ email });
+      if (response.exists) {
         setEmail(email); // Set user email in context
         navigate(`/signin?email=${encodeURIComponent(email)}`); // Redirect to login with email
       } else {
