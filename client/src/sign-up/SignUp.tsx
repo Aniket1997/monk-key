@@ -7,7 +7,7 @@ import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Added useLocation to get query params
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -15,9 +15,10 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import AppTheme from "../shared-theme/AppTheme";
 import SitemarkIcon from "../component/SitemarkIcon.tsx";
-import { registerUser } from "../api/AuthApi.ts"; // Import the registerUser function
+import { registerUser } from "../api/AuthApi.ts";
 import Cookies from "js-cookie";
 
+// Styled components (same as before)
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -75,18 +76,26 @@ const BrandContainer = styled("div")(() => ({
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
+  const location = useLocation(); // Access query parameters
+
+  // Parse query parameter for email
+  const queryParams = new URLSearchParams(location.search);
+  const emailFromQuery = queryParams.get("email");
+
   const [formData, setFormData] = React.useState({
     name: "",
-    email: "",
+    email: emailFromQuery || "", // Initialize email from query param if present
     mobile: "",
     password: "",
   });
+
   const [errors, setErrors] = React.useState({
     name: "",
     email: "",
     mobile: "",
     password: "",
   });
+
   const [loading, setLoading] = React.useState(false);
   const [serverMessage, setServerMessage] = React.useState("");
 
@@ -193,6 +202,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 onChange={handleChange}
                 error={!!errors.email}
                 helperText={errors.email}
+                disabled={!!emailFromQuery} // Disable if email comes from query param
               />
             </FormControl>
             <FormControl>
