@@ -1,14 +1,13 @@
-import * as React from "react";
+import React from "react";
 import Stack from "@mui/material/Stack";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
-import CustomDatePicker from "./CustomDatePicker.tsx";
-import NavbarBreadcrumbs from "./NavbarBreadcrumbs.tsx";
-import MenuButton from "./MenuButton.tsx";
+import CustomDatePicker from "./CustomDatePicker";
+import NavbarBreadcrumbs from "./NavbarBreadcrumbs";
+import MenuButton from "./MenuButton";
 import ColorModeIconDropdown from "../../shared-theme/ColorModeIconDropdown.tsx";
+import Search from "./Search";
 
-import Search from "./Search.tsx";
-
-export default function Header() {
+const Header: React.FC = () => {
   return (
     <Stack
       direction="row"
@@ -33,4 +32,6 @@ export default function Header() {
       </Stack>
     </Stack>
   );
-}
+};
+
+export default Header;

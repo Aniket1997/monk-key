@@ -1,13 +1,14 @@
-import * as React from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs, { breadcrumbsClasses } from "@mui/material/Breadcrumbs";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
+import { useSelectedItem } from "../../customHooks/SelectedItemProvider";
 
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
   [`& .${breadcrumbsClasses.separator}`]: {
-    color: (theme.vars || theme).palette.action.disabled,
+    color: theme.palette.action.disabled,
     margin: 1,
   },
   [`& .${breadcrumbsClasses.ol}`]: {
@@ -15,7 +16,9 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   },
 }));
 
-export default function NavbarBreadcrumbs() {
+const NavbarBreadcrumbs: React.FC = () => {
+  const { selectedItem } = useSelectedItem();
+
   return (
     <StyledBreadcrumbs
       aria-label="breadcrumb"
@@ -26,8 +29,10 @@ export default function NavbarBreadcrumbs() {
         variant="body1"
         sx={{ color: "text.primary", fontWeight: 600 }}
       >
-        Home
+        {selectedItem}
       </Typography>
     </StyledBreadcrumbs>
   );
-}
+};
+
+export default NavbarBreadcrumbs;
