@@ -5,7 +5,7 @@ import MainContent from "./components/MainContent.tsx";
 import Latest from "./components/Latest.tsx";
 import Footer from "../component/Footer.tsx";
 import AppTheme from "../shared-theme/AppTheme.tsx";
-import AppAppBar from "../component/AppAppBar.tsx";
+import AppAppBar from "../component/AppBar.tsx";
 
 export default function Blog(props: { disableCustomTheme?: boolean }) {
   return (

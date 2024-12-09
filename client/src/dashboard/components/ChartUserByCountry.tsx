@@ -61,7 +61,7 @@ const StyledText = styled("text", {
 })<StyledTextProps>(({ theme }) => ({
   textAnchor: "middle",
   dominantBaseline: "central",
-  fill: (theme.vars || theme).palette.text.secondary,
+  fill: theme.palette.text.secondary,
   variants: [
     {
       props: {
@@ -105,14 +105,14 @@ function PieCenterLabel({ primaryText, secondaryText }: PieCenterLabelProps) {
   const secondaryY = primaryY + 24;
 
   return (
-    <React.Fragment>
+    <>
       <StyledText variant="primary" x={left + width / 2} y={primaryY}>
         {primaryText}
       </StyledText>
       <StyledText variant="secondary" x={left + width / 2} y={secondaryY}>
         {secondaryText}
       </StyledText>
-    </React.Fragment>
+    </>
   );
 }
 

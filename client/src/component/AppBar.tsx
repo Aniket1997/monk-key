@@ -160,7 +160,7 @@ export default function AppAppBar() {
               variant="text"
               size="small"
               component={Link}
-              to="/sign-in"
+              to="/signin"
             >
               Sign in
             </Button>
