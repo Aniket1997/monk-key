@@ -11,7 +11,6 @@ import { useSelectedItem } from "../../customHooks/SelectedItemProvider";
 const MainGrid: React.FC = () => {
   const { selectedItem } = useSelectedItem();
 
-  // Render the correct component based on the selected item
   const renderContent = () => {
     switch (selectedItem) {
       case "Home":
@@ -28,12 +27,38 @@ const MainGrid: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, p: 2 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column", // Column layout
+        minHeight: "100vh", // Full viewport height
+        width: "100%",
+        maxWidth: { sm: "100%", md: "1700px" },
+        p: 2,
+      }}
+    >
+      {/* Header */}
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         {selectedItem}
       </Typography>
-      {renderContent()}
-      <Copyright sx={{ my: 4 }} />
+
+      {/* Content Area */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "auto", // Ensure scrolling if content overflows
+        }}
+      >
+        {renderContent()}
+      </Box>
+
+      {/* Footer */}
+      <Box sx={{ mt: "auto" }}>
+        <Copyright />
+      </Box>
     </Box>
   );
 };

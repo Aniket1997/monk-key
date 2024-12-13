@@ -17,6 +17,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/custom.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/custom.d.ts", "src/dashboard/components/Roadmaps.tsx"],
   "exclude": ["node_modules", "dist"]
 }
